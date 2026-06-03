@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>💳 Fraud Detection System</h2>
+
+<form method="post">
+    <input name="amount" placeholder="Amount" required>
+    <input name="oldbalanceOrg" placeholder="Sender Old Balance" required>
+    <input name="newbalanceOrig" placeholder="Sender New Balance" required>
+    <input name="oldbalanceDest" placeholder="Receiver Old Balance" required>
+    <input name="newbalanceDest" placeholder="Receiver New Balance" required>
+
+    <button>Check Fraud</button>
+</form>
+
+<!-- RESULT -->
+{% if result %}
+    {% if "Fraud" in result %}
+        <h3 style="color:red;">🚨 Fraud 🚨</h3>
+    {% else %}
+        <h3 style="color:lightgreen;">✅ Safe ✅</h3>
+    {% endif %}
+{% endif %}
+
+<!-- HISTORY -->
+<h3>📊 Transaction History</h3>
+
+<table>
+<tr>
+    <th>Amount</th>
+    <th>Status</th>
+</tr>
+
+{% for row in data %}
+<tr>
+    <td>{{row[0]}}</td>
+
+    {% if row[1] == 1 %}
+        <td style="color:red;">Fraud 🚨</td>
+    {% else %}
+        <td style="color:lightgreen;">Safe ✅</td>
+    {% endif %}
+</tr>
+{% endfor %}
+</table>
+
+<!-- CHART -->
+<h3>📈 Analysis</h3>
+
+<div class="chart-box">
+    <canvas id="myChart"></canvas>
+</div>
+
+<p><b>Fraud: {{fraud}}% | Safe: {{safe}}%</b></p>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const ctx = document.getElementById('myChart');
+
+new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: ['Fraud 🚨', 'Safe ✅'],
+        datasets: [{
+            data: [{{fraud}}, {{safe}}],
+            backgroundColor: ['#ff4d4d', '#4CAF50']
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        return context.label + ": " + context.raw + "%";
+                    }
+                }
+            }
+        }
+    }
+});
+</script>
+
+<br>
+<a href="/logout">Logout</a>
+
+</div>
+
+</body>
+</html>
