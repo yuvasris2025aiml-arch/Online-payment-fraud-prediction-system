@@ -1,0 +1,1 @@
+The Live Online Payment Fraud Prediction System is a web-based application that detects whether a transaction is Safe or Fraudulent using a machine learning model. It helps improve the security of online payment systems by providing real-time predictions.
